@@ -6,7 +6,7 @@ export async function POST(request) {
         const token = process.env.TELEGRAM_TOKEN; 
         
         if (!token) {
-            console.error("Error: TELEGRAM_TOKEN is missing in Vercel!");
+            console.error("Error: TELEGRAM_TOKEN is missing!");
             return NextResponse.json({ ok: false }, { status: 500 });
         }
 
@@ -16,8 +16,6 @@ export async function POST(request) {
 
             if (text === '/start') {
                 await sendMessage(token, chatId, "Привет! Бот успешно запущен и работает на Vercel! 🚀");
-            } else if (text === '/info') {
-                await sendMessage(token, chatId, "ℹ️ Информация: Бот работает на платформе Next.js.");
             } else {
                 await sendMessage(token, chatId, `Вы написали: ${text}`);
             }
@@ -37,5 +35,3 @@ async function sendMessage(token, chatId, text) {
         body: JSON.stringify({ chat_id: chatId, text: text }),
     });
 }
-
-
