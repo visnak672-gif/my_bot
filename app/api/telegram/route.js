@@ -6,7 +6,7 @@ export async function POST(request) {
         const token = process.env.TELEGRAM_TOKEN; 
         
         if (!token) {
-            console.error("Ошибка: TELEGRAM_TOKEN не задан в Vercel!");
+            console.error("Error: TELEGRAM_TOKEN is missing in Vercel!");
             return NextResponse.json({ ok: false }, { status: 500 });
         }
 
@@ -17,24 +17,16 @@ export async function POST(request) {
             if (text === '/start') {
                 await sendMessage(token, chatId, "Привет! Бот успешно запущен и работает на Vercel! 🚀");
             } else if (text === '/info') {
-                await sendMessage(token, chatId, "ℹ️ Информация: Этот бот работает на платформе Next.js v14 (App Router) и функциях Vercel.");
-            } else if (text === '/help') {
-                await sendMessage(token, chatId, "❓ Помощь: Используйте кнопки меню или введите /start для перезапуска.");
+                await sendMessage(token, chatId, "ℹ️ Информация: Бот работает на платформе Next.js.");
             } else {
-                await sendMessage(token, chatId, `Вы написали: ${text}\nК сожалению, я не знаю такой команды. Попробуйте ввести /help.`);
+                await sendMessage(token, chatId, `Вы написали: ${text}`);
             }
         }
 
-        if (update.callback_query) {
-            const chatId = update.callback_query.message.chat.id;
-            const callbackData = update.callback_query.data;
-            await sendMessage(token, chatId, `Вы нажали кнопку: ${callbackData}`);
-        }
-
-        return NextResponse.json({ хорошо: true });
+        return NextResponse.json({ ok: true });
     } catch (error) {
-        console.error("Ошибка:", error);
-        return NextResponse.json({ хорошо: true });
+        console.error("Callback error:", error);
+        return NextResponse.json({ ok: true });
     }
 }
 
@@ -42,6 +34,8 @@ async function sendMessage(token, chatId, text) {
     await fetch(`https://telegram.org{token}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown' }),
+        body: JSON.stringify({ chat_id: chatId, text: text }),
     });
 }
+
+
