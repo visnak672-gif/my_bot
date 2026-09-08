@@ -26,13 +26,7 @@ async function setupBotMenu() {
   });
 }
 
-export async function POST(request) {
-  const { searchParams } = new URL(request.url);
-  const tokenParam = searchParams.get('token');
-
-  if (!BOT_TOKEN || tokenParam !== BOT_TOKEN) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+export async function POST(request) 
 
   try {
     const update = await request.json();
